@@ -43,7 +43,7 @@ DIR_data        <- "data"
 ZIP_FILE_data   <- "UCI_HAR.zip"
 FILE_activities <- paste (DIR_data, "/activity_labels.txt", sep="")
 FILE_features   <- paste (DIR_data, "/features.txt", sep="")
-FILE_output     <- "./run_analysis-Activity_Subject_Measurement_Means.txt"
+FILE_output     <- "./run_analysis-Activity_Subject_Means.txt"
 
 ## ------------------ Helper Functions -------------------
 load_and_label <- function (file1, new_colnames, file2 = "") {
@@ -69,13 +69,15 @@ add_id_column <- function (data_table) {
 
 transform_column_names <- function (char_vector) {
   x <- gsub (",", "-", char_vector)
-#  x <- gsub ("^t", "time-", x) - not needed for assignment
-#  x <- gsub ("^f", "freq-", x) - not needed for assignment
+  x <- gsub ("^t", "Time-", x) 
+  x <- gsub ("^f", "Freq-", x) 
+  x <- gsub ("mean\\(\\)", "Mean", x) 
+  x <- gsub ("std\\(\\)", "SD", x) 
   x
 }
 
 ## ------------------ Begin Script -----------------------
-## Stage 0) Download and set up Meta Data information
+## Stage 0) Download and set up information
 ## Step 0.1 - download the dataset from UCI web-site - Note: URL for this assignment is hard-wired (in future it should be a configuration parameter)
 if (!file.exists(DIR_data)) {
   print(paste("Could not file ", DIR_data, " directory - creating the directory..."))
@@ -97,15 +99,15 @@ if (!file.exists(FILE_features)) {
 
 ## Step 0.2 - read Meta data information into R as tables for reference & processing
 print ("Stage 0) Initializing and loading Meta data...")
-if (!file.exists(FILE_activities)) {
+if (!file.exists(FILE_activities))
   stop (paste("run_analysis.R ERROR: could not find:", FILE_activities))
-}
+
 DT_act_labels <- load_and_label(FILE_activities, c("act_id", "Activity"))
 setkey(DT_act_labels, act_id)
 
-if (!file.exists(FILE_features)) {
+if (!file.exists(FILE_features))
   stop (paste("run_analysis.R ERROR: could not find:", FILE_features))
-}
+
 DT_feat_labels <- load_and_label(FILE_features, c("feat_id", "feat_label"))
 setkey(DT_feat_labels, feat_id)
 
@@ -114,11 +116,11 @@ setkey(DT_feat_labels, feat_id)
 ##
 print ("Stage 1) Merge training and test sets into one data set - please wait...")
 ## Step 1.1 - load & merge test and train subject information + add a id_seq unique data row identifier
-DT_HAR_data <- add_id_column (load_and_label ("subject_test.txt", c("Subject"), "subject_train.txt"))
+DT_HAR_data <- add_id_column (load_and_label ("subject_train.txt", c("Subject"), "subject_test.txt"))
 
 ## Step 1.2 - load & merge test and train activity information + add a id_seq unique data row identifier
 DT_act_data <- merge (
-                add_id_column (load_and_label ("y_test.txt", c("act_id"), "y_train.txt")),
+                add_id_column (load_and_label ("y_train.txt", c("act_id"), "y_test.txt")),
                 DT_act_labels,
                 by = "act_id",
                 all = TRUE)
@@ -130,11 +132,11 @@ setkey(DT_HAR_data, id_seq)
 
 ## Step 1.4 - load test & train measurement information + add id_seq common row marker + merge them into one data.table
 DT_HAR_feat <- add_id_column (
-  load_and_label ("X_test.txt"
+  load_and_label ("X_train.txt"
                 , transform_column_names(
                     as.vector(DT_feat_labels[[2]])
                   )
-                , "X_train.txt")
+                , "X_test.txt")
   )
 setkey (DT_HAR_feat, id_seq)
 
@@ -153,6 +155,7 @@ feat_col_to_remove <- transform_column_names(as.vector(DT_feat_col_to_remove$fea
 for (col in feat_col_to_remove) {
   DT_HAR_feat <- DT_HAR_feat[, c(col) := NULL]
 }
+rm(col)
 ##
 ## Stage 3) Uses descriptive activity names to name the activities in the data set
 ##
@@ -166,7 +169,6 @@ DT_HAR_data[, id_seq := NULL]
 
 ## Step 3.2 - clean up the data and remove data and variable no longer needed
 # remove these, we don't need it anymore
-rm(col)
 rm(DT_HAR_feat)
 rm(DT_act_labels)
 rm(DT_act_data)
@@ -182,8 +184,7 @@ DT_HAR_melt <- melt(DT_HAR_data, id=c("Activity", "Subject"))
 DT_HAR_tidy <- dcast(DT_HAR_melt, Activity + Subject ~ variable, mean)
 
 ## Step 4.2 - write out the resulting tidy data to the file specified in README.TXT into current working directory
-write.csv(DT_HAR_tidy, "run_analysis-Activity_Subject_Measurement_Means.txt")
-
+write.csv(DT_HAR_tidy, FILE_output)
 ## Step 4.3 - final clean up
 rm(DT_HAR_data)
 rm(DT_HAR_melt)
