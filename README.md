@@ -63,7 +63,7 @@ HAR = Human Activity Recognition using smart phones Dataset
 Assumptions & Meta-Data information
 -----------------------------------
 * A) all data is stored under ./data directory under the current working directory of the script
-* B). activity_labels.txt contains the labels for measured Human Activities - use these labels in association with y_train.txt or y_test.txt files
+* B) activity_labels.txt contains the labels for measured Human Activities - use these labels in association with y_train.txt or y_test.txt files
 * C) features.txt contains the labels for columns for the data measurements stored in the test or train sub-directories under X_train.txt & X_test.txt files
 * D) run_analyis.R script outputs to the local working directory to a file named: run_analysis-Activity_Subject_Measurement_Means.txt
 
