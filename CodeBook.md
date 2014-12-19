@@ -54,7 +54,7 @@ Earch row for a unique combination of an **Activity** & a **Subject** contains 6
 
 `MeasurementType` may be either `Mean`, indicating an average, or `SD`, indicating standard deviation.
 
-`Axis` optional - indicates the axis of movement where the measurements took place. If applicable will either be: `X`, `Y` or `Z`.
+`Axis` optional: indicates the axis of movement where the measurements took place if applicable will either be: `X`, `Y` or `Z`.
 
 Examples
 --------
