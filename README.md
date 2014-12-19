@@ -38,9 +38,8 @@ Attributes
    The script assumes it can write in it's current working directory.
 
 # Library Dependencies
-
-## data.table
-## reshape2
+* `data.table`:  http://cran.r-project.org/web/packages/data.table/index.html
+* `reshape2`  :  http://cran.r-project.org/web/packages/reshape2/index.html
 
 Usage
 =====
