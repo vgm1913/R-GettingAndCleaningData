@@ -38,12 +38,19 @@ require("data.table")
 require("reshape2")
 
 ## run_analysis.R CONFIGURATION PARAMTERS
+##     in future look into making some of the parameters below into optional command line parameters for this script
 ##
-DIR_data        <- "data"
-ZIP_FILE_data   <- "UCI_HAR.zip"
-FILE_activities <- paste (DIR_data, "/activity_labels.txt", sep="")
-FILE_features   <- paste (DIR_data, "/features.txt", sep="")
-FILE_output     <- "./run_analysis-Activity_Subject_Means.txt"
+DIR_data               <- "data"
+ZIP_FILE_data          <- "UCI_HAR.zip"
+FILE_activities        <- paste (DIR_data, "/activity_labels.txt", sep="")
+FILE_features          <- paste (DIR_data, "/features.txt", sep="")
+FILE_subject_train     <- paste(DIR_data, "/subject_train.txt", sep="")
+FILE_subject_test      <- paste(DIR_data, "/subject_test.txt", sep="")
+FILE_activity_train    <- paste(DIR_data, "/y_train.txt", sep="")
+FILE_activity_test     <- paste(DIR_data, "/y_test.txt", sep="")
+FILE_measurement_train <- paste(DIR_data, "/X_train.txt", sep="")
+FILE_measurement_test  <- paste(DIR_data, "/X_test.txt", sep="")
+FILE_output            <- "./run_analysis-Activity_Subject_Means.txt"
 
 ## ------------------ Helper Functions -------------------
 load_and_label <- function (file1, new_colnames, file2 = "") {
@@ -116,11 +123,11 @@ setkey(DT_feat_labels, feat_id)
 ##
 print ("Stage 1) Merge training and test sets into one data set - please wait...")
 ## Step 1.1 - load & merge test and train subject information + add a id_seq unique data row identifier
-DT_HAR_data <- add_id_column (load_and_label ("subject_train.txt", c("Subject"), "subject_test.txt"))
+DT_HAR_data <- add_id_column (load_and_label (FILE_subject_train, c("Subject"), FILE_subject_test))
 
 ## Step 1.2 - load & merge test and train activity information + add a id_seq unique data row identifier
 DT_act_data <- merge (
-                add_id_column (load_and_label ("y_train.txt", c("act_id"), "y_test.txt")),
+                add_id_column (load_and_label (FILE_activity_train, c("act_id"), FILE_activity_test)),
                 DT_act_labels,
                 by = "act_id",
                 all = TRUE)
@@ -132,12 +139,14 @@ setkey(DT_HAR_data, id_seq)
 
 ## Step 1.4 - load test & train measurement information + add id_seq common row marker + merge them into one data.table
 DT_HAR_feat <- add_id_column (
-  load_and_label ("X_train.txt"
-                , transform_column_names(
+                load_and_label (FILE_measurement_train
+                  , transform_column_names(
                     as.vector(DT_feat_labels[[2]])
                   )
-                , "X_test.txt")
-  )
+                  , FILE_measurement_test)
+                )
+#add_id_column (load_and_label (FILE_subject_train, transform_column_names(as.vector(DT_feat_labels[[2]])), FILE_subject_test))
+
 setkey (DT_HAR_feat, id_seq)
 
 ##
@@ -184,7 +193,7 @@ DT_HAR_melt <- melt(DT_HAR_data, id=c("Activity", "Subject"))
 DT_HAR_tidy <- dcast(DT_HAR_melt, Activity + Subject ~ variable, mean)
 
 ## Step 4.2 - write out the resulting tidy data to the file specified in README.TXT into current working directory
-write.csv(DT_HAR_tidy, FILE_output)
+write.csv(DT_HAR_tidy, FILE_output, row.names = FALSE)
 ## Step 4.3 - final clean up
 rm(DT_HAR_data)
 rm(DT_HAR_melt)
