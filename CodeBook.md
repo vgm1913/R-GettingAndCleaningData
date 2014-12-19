@@ -50,7 +50,7 @@ Earch row for a unique combination of an **Activity** & a **Subject** contains 6
 
 `SignalDomain` may be either `Time` or `Freq` (`Freq` denotes frequency domain signals).
 
-`FeatureMeasureSource` indicated the type of feature source: accelerometer, gyroscope that was used to make measurement. Possible values: BodyAcc, GravityAcc, BodyAccJerk, BodyGyro, BodyGyroJerk, BodyAccMag, GravityAccMag, BodyAccJerkMag, BodyGyroMag, BodyGyroJerkMag, BodyBodyAccJerkMag, , BodyBodyGyroMag, & BodyBodyGyroJerkMag.
+`FeatureMeasureSource` indicated the type of feature source: accelerometer, gyroscope that was used to make measurement. Possible values: `BodyAcc`, `GravityAcc`, `BodyAccJerk`, `BodyGyro`, `BodyGyroJerk`, `BodyAccMag`, `GravityAccMag`, `BodyAccJerkMag`, `BodyGyroMag`, `BodyGyroJerkMag`, `BodyBodyAccJerkMag`, `BodyBodyGyroMag`, & `BodyBodyGyroJerkMag`.
 
 `MeasurementType` may be either `Mean`, indicating an average, or `SD`, indicating standard deviation.
 
@@ -58,8 +58,8 @@ Earch row for a unique combination of an **Activity** & a **Subject** contains 6
 
 Examples
 --------
-Time-BodyAcc-Mean-X
-Freq-BodyAcc-Mean-Z
-Freq-BodyAcc-SD-X
-Time-BodyAccJerkMag-SD
-Time-BodyGyroMag-Mean
+`Time-BodyAcc-Mean-X`
+`Freq-BodyAcc-Mean-Z`
+`Freq-BodyAcc-SD-X`
+`Time-BodyAccJerkMag-SD`
+`Time-BodyGyroMag-Mean`
