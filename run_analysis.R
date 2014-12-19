@@ -2,15 +2,15 @@
 ## script:        run_analysis.R
 ## author:        VGM
 ## created:       DEC-08-2014
-## last modified: DEC-15-2014
+## last modified: DEC-18-2014
 ## coursera:      https://class.coursera.org/getdata-016/human_grading
 ##
-## SUMMARY:       run_analysis is a utility function that is specifically designed to work with UCI HAR dataset
+## SUMMARY:       run_analysis is a specific script designed to work with UCI HAR dataset
 ##                HAR = Human Activity Recognition using smart phones Dataset
 ##                (see http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
 ##                & performs the following:
 ##
-##              	1. Merges the training and the test sets to create one data set
+##                1. Merges the training and the test sets to create one data set
 ##                2. Extracts only the measurements on the mean and standard deviation for each measurement
 ##                3. Uses descriptive activity names to name the activities in the data set + Appropriately labels
 ##                   the data set with descriptive variable names
